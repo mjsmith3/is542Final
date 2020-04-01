@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import './insertion.css';
-import Graph from '../graph/graph'
+import Graph from '../graph/graph';
+import Button from '@material-ui/core/Button';
+
 
 class Insertion extends Component {
   constructor(props) {
@@ -17,7 +19,14 @@ class Insertion extends Component {
   }
 
   componentDidMount() {
-    this.setState({ insertArray: this.props.data });
+  }
+
+  componentDidUpdate(nextProps) {
+    let newdata = this.props.data
+    let currentData = nextProps.data
+    if (currentData !== newdata) {
+      this.setState({ insertArray: [...newdata], color: "blue" })
+    }
   }
 
   step() {
@@ -79,8 +88,8 @@ class Insertion extends Component {
           graphId="insertionGraph"
           svgId="insertionSVG"
         />
-        <button onClick={this.step}>step</button>
-        <button onClick={this.run}>run</button>
+        <Button variant="contained" onClick={this.step}>Step</Button>
+        <Button variant="contained" onClick={this.run}>Run</Button>
       </div>
     );
   }

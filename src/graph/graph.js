@@ -14,6 +14,7 @@ class Graph extends Component {
 
   }
 
+
   componentDidMount() {
     let svg = d3.select("#" + this.props.svgId).append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -68,8 +69,12 @@ class Graph extends Component {
     this.renderData()
   }
 
-  componentDidUpdate() {
-    this.renderData();
+  componentDidUpdate(nextProps) {
+    let currentData = this.props.data
+    let data = nextProps.data
+    if (currentData !== data) {
+      this.renderData();
+    }
   }
 
   renderData() {
@@ -83,8 +88,8 @@ class Graph extends Component {
 
     // Create a scale for the width of each bar
     let x = d3.scaleBand()
-      .domain(this.props.data.map(function (d) {
-        return d;
+      .domain(this.props.data.map(function (d, index) {
+        return index;
       }))
       .range([0, width])
       .paddingInner(0.2)
@@ -104,8 +109,8 @@ class Graph extends Component {
       .attr("y", function (d) {
         return y(d);
       })
-      .attr("x", function (d) {
-        return x(d)
+      .attr("x", function (d, index) {
+        return x(index)
       })
       .attr("height", function (d) {
         return height - y(d);
