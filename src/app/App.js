@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Insertion from '../insertion/insertion'
-import Bubble from '../bubble/bubble'
+import Insertion from '../insertion/insertion';
+import Bubble from '../bubble/bubble';
+import Quick from '../quick/quick';
 import './App.css';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,6 +17,7 @@ class App extends Component {
     super(props);
     this.state = {
       data: [],
+      runAll: false
     }
 
     this.runAll = this.runAll.bind(this);
@@ -24,15 +26,16 @@ class App extends Component {
     this.fewUnique = this.fewUnique.bind(this);
   }
 
-
-
   componentDidMount() {
 
   }
 
 
   runAll() {
-    console.log("run all");
+    if (this.setState.runAll) {
+      return;
+    }
+    this.setState({ runAll: true })
   }
 
   randomize() {
@@ -41,11 +44,32 @@ class App extends Component {
       newdata.push(Math.random())
     }
 
-    this.setState({ data: newdata })
+    this.setState({ data: newdata, runAll: false })
   }
 
   nearlySorted() {
-    console.log("nearly Sorted");
+    let newdata = [];
+    for (let i = 0; i < 50; i++) {
+      newdata.push(Math.random())
+    }
+
+    newdata.sort()
+    for (let x = 0; x < 8; x++) {
+      let randIndex1 = this.getRandomInt(0, 49);
+      let randIndex2 = this.getRandomInt(0, 49);
+
+      let temp = newdata[randIndex1];
+      newdata[randIndex1] = newdata[randIndex2];
+      newdata[randIndex2] = temp;
+    }
+
+    this.setState({ data: newdata, runAll: false })
+  }
+
+  getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
   }
 
   fewUnique() {
@@ -56,10 +80,11 @@ class App extends Component {
 
     let newdata = [];
     for (let i = 0; i < 50; i++) {
-      newdata.push(fewUnique[i % 5])
+      let randIndex = this.getRandomInt(0, 4);
+      newdata.push(fewUnique[randIndex])
     }
 
-    this.setState({ data: newdata })
+    this.setState({ data: newdata, runAll: false })
   }
 
 
@@ -75,19 +100,20 @@ class App extends Component {
               IS 542 Final - Sorting App
           </Typography>
             <span>
-              <Button variant="contained" className="headerButton" onClick={this.randomize}>Randomize</Button>
-              <Button variant="contained" className="headerButton" onClick={this.fewUnique}>Few Unique</Button>
-              <Button variant="contained" className="headerButton" onClick={this.nearlySorted}>Nearly Sorted</Button>
-              <Button variant="contained" className="headerButton" onClick={this.runAll}>Run All</Button>
+              <Button variant="contained" id="headerButton" onClick={this.randomize} >Randomize</Button>
+              <Button variant="contained" id="headerButton" onClick={this.fewUnique} >Few Unique</Button>
+              <Button variant="contained" id="headerButton" onClick={this.nearlySorted} >Nearly Sorted</Button>
+              <Button variant="contained" id="headerButton" onClick={this.runAll} >Run All</Button>
             </span>
 
           </Toolbar>
         </AppBar>
-        <Insertion className="insertion" data={this.state.data} />
-        <Bubble className="bubble" data={this.state.data} />
+        <Insertion className="insertion" data={this.state.data} runAll={this.state.runAll} />
+        <Bubble className="bubble" data={this.state.data} runAll={this.state.runAll} />
+        <Quick className="quick" data={this.state.data} runAll={this.state.runAll} />
 
 
-      </div>
+      </div >
     );
   }
 

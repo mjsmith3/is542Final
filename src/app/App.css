@@ -10,8 +10,8 @@
     grid-template-columns: 1fr 1fr ;
     grid-template-rows:  5em 1fr ;
     grid-template-areas: 
-        "header header"
-        "insertion bubble";
+        "header header header"
+        "insertion bubble quick";
 }
 
 .header {
@@ -22,12 +22,19 @@
 .bubble {
   grid-area: bubble;
 }
+.quick {
+  grid-area: quick;
+}
 .insertion {
   grid-area: insertion;
 }
 #title {
   margin-right: 25%;
   margin-left: 13%;
+}
+
+#headerButton {
+  margin: 1em;
 }
 
 

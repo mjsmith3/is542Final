@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import './bubble.css';
+import './quick.css';
 import Graph from '../graph/graph';
 import Button from '@material-ui/core/Button';
 
 
-class Bubble extends Component {
+class Quick extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -80,13 +80,13 @@ class Bubble extends Component {
 
   render() {
     return (
-      <div className="bubble">
+      <div className="quick">
         <Graph
           data={this.state.array}
           color={this.state.color}
-          name="Bubble Sort"
-          graphId="bubbleGraph"
-          svgId="bubbleSVG"
+          name="Quick Sort"
+          graphId="quickGraph"
+          svgId="quickSVG"
         />
         <Button variant="contained" onClick={this.step}>Step</Button>
         <Button variant="contained" onClick={this.run}>Run</Button>
@@ -95,4 +95,4 @@ class Bubble extends Component {
   }
 }
 
-export default Bubble;
+export default Quick;

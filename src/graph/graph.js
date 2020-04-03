@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import './graph.css';
 
-const margin = { left: 100, right: 10, top: 50, bottom: 10 }
+const margin = { left: 20, right: 20, top: 50, bottom: 10 }
 
 //Set the width and the height of your chart
 let width = 600 - margin.left - margin.right;
@@ -69,12 +69,8 @@ class Graph extends Component {
     this.renderData()
   }
 
-  componentDidUpdate(nextProps) {
-    let currentData = this.props.data
-    let data = nextProps.data
-    if (currentData !== data) {
-      this.renderData();
-    }
+  componentDidUpdate() {
+    this.renderData();
   }
 
   renderData() {
