@@ -7,11 +7,12 @@
     height: 100vh;
     display: grid;
     grid-column-gap: 1px;
-    grid-template-columns: 1fr 1fr ;
-    grid-template-rows:  5em 1fr ;
+    grid-template-columns: 1fr 1fr 1fr ;
+    grid-template-rows:  5em 1fr 1fr ;
     grid-template-areas: 
         "header header header"
-        "insertion bubble quick";
+        "insertion bubble quick"
+        "selection selection selection";
 }
 
 .header {
@@ -27,6 +28,9 @@
 }
 .insertion {
   grid-area: insertion;
+}
+.selection {
+  grid-area: selection;
 }
 #title {
   margin-right: 25%;

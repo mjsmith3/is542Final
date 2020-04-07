@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import Insertion from '../insertion/insertion';
 import Bubble from '../bubble/bubble';
 import Quick from '../quick/quick';
+import Selection from '../selection/selection';
 import './App.css';
-import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import IconButton from '@material-ui/core/IconButton';
 
 
@@ -111,6 +110,7 @@ class App extends Component {
         <Insertion className="insertion" data={this.state.data} runAll={this.state.runAll} />
         <Bubble className="bubble" data={this.state.data} runAll={this.state.runAll} />
         <Quick className="quick" data={this.state.data} runAll={this.state.runAll} />
+        <Selection className="selection" data={this.state.data} runAll={this.state.runAll} />
 
 
       </div >
