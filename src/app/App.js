@@ -3,6 +3,8 @@ import Insertion from '../insertion/insertion';
 import Bubble from '../bubble/bubble';
 import Quick from '../quick/quick';
 import Selection from '../selection/selection';
+import Merge from '../merge/merge';
+import Radix from '../radix/radix';
 import './App.css';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -111,8 +113,8 @@ class App extends Component {
         <Bubble className="bubble" data={this.state.data} runAll={this.state.runAll} />
         <Quick className="quick" data={this.state.data} runAll={this.state.runAll} />
         <Selection className="selection" data={this.state.data} runAll={this.state.runAll} />
-
-
+        <Merge className="merge" data={this.state.data} runAll={this.state.runAll} />
+        <Radix className="radix" data={this.state.data} runAll={this.state.runAll} />
       </div >
     );
   }

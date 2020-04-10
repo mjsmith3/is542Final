@@ -12,7 +12,7 @@
     grid-template-areas: 
         "header header header"
         "insertion bubble quick"
-        "selection selection selection";
+        "selection merge radix";
 }
 
 .header {
@@ -32,13 +32,20 @@
 .selection {
   grid-area: selection;
 }
+.merge {
+  grid-area: merge;
+}
+.radix {
+  grid-area: radix;
+}
 #title {
   margin-right: 25%;
-  margin-left: 13%;
+  margin-left: 5%;
 }
 
 #headerButton {
-  margin: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 

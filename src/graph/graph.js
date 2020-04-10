@@ -1,72 +1,36 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import './graph.css';
+import Button from '@material-ui/core/Button';
 
-const margin = { left: 20, right: 20, top: 50, bottom: 10 }
-
-//Set the width and the height of your chart
-let width = 600 - margin.left - margin.right;
-let height = 400 - margin.top - margin.bottom;
+const margin = { left: 20, right: 20, top: 50, bottom: 0 }
 
 class Graph extends Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      height:0,
+      width:0,
+      calculated:false
+    }
   }
 
-
   componentDidMount() {
-    let svg = d3.select("#" + this.props.svgId).append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom);
-
-    //Create a group that will contain your chart
-    let g = svg.append("g")
-      .attr("transform", `translate(${margin.left}, ${margin.top})`)
-      .attr("id", this.props.graphId);
-
-    //Create a scale for the height of your buildings (bars)
-    let y = d3.scaleLinear()
-      .domain([0,
-        d3.max(this.props.data, function (d) { return d })
-      ])
-      .range([height, 0])
-
-    // Create a scale for the width of each bar
-    let x = d3.scaleBand()
-      .domain(this.props.data.map(function (d) {
-        return d;
-      }))
-      .range([0, width])
-      .paddingInner(0.2)
-      .paddingOuter(0.3);
-
-    //Add an x axis with labels  
-    let xAxisCall = d3.axisBottom(x);
-    g.append("g").call(xAxisCall)
-      .attr("class", "x axis")
-      .attr("transform", `translate(0, ${height})`)
-      .call(xAxisCall)
-      .selectAll("text")
-      .remove()
-
-    //add a y axis with labels
-    let yAxisCall = d3.axisLeft(y)
-      .ticks(0)
-
-    g.append("g")
-      .attr("class", "y-axis")
-      .call(yAxisCall)
-      .selectAll("text")
-      .remove();
-
-    //Add a chart title in the SVG
-    svg.append("text")
-      .attr("x", width / 2)
-      .attr("y", margin.top / 2)
-      .text(this.props.name)
-      .attr("font-size", "20px")
+    if (!this.state.calculated) {
+      this.setState({calculated:true})
+      this.calculateSVGSize()
+    }
+    
+    
     this.renderData()
+  }
+
+  calculateSVGSize() {
+    let divWidth = document.getElementById(this.props.graphId).clientWidth;
+    let divHeight = document.getElementById(this.props.graphId).clientHeight;    
+    console.log(divHeight * .85)
+    console.log(divWidth * .85)
+    this.setState({height:(divHeight * .85), width:(divWidth*.85), calculated:true})
   }
 
   componentDidUpdate() {
@@ -74,20 +38,23 @@ class Graph extends Component {
   }
 
   renderData() {
+    var divWidth = document.getElementById(this.props.graphId).clientWidth *.85;
+    var divHeight = document.getElementById(this.props.graphId).clientHeight*.85; 
+
 
     //Create a scale for the height of your buildings (bars)
     let y = d3.scaleLinear()
       .domain([0,
         d3.max(this.props.data, function (d) { return d })
       ])
-      .range([height, 0])
+      .range([this.state.height, this.state.height*.05])
 
     // Create a scale for the width of each bar
     let x = d3.scaleBand()
       .domain(this.props.data.map(function (d, index) {
         return index;
       }))
-      .range([0, width])
+      .range([this.state.width*.05, this.state.width])
       .paddingInner(0.2)
       .paddingOuter(0.3);
 
@@ -109,16 +76,30 @@ class Graph extends Component {
         return x(index)
       })
       .attr("height", function (d) {
-        return height - y(d);
+        return divHeight - y(d) + (divHeight*.05);
       })
       .attr("width", x.bandwidth)
       .attr("fill", this.props.color)
   }
 
+  getHeight() {
+    return this.state.height;
+  }
+
   render() {
     return (
       <div className="graph">
-        <div id={this.props.svgId}></div>
+        <div style={{height: "100%"}}>
+          <div id={this.props.svgId} style={{height: "85%"}}>
+            <svg height="100%" width="100%" id={this.props.graphId}>
+              <line id="xAxis" x1="5%" y1="5%" x2="5%" y2="90%" />
+              <line id="yAxis" x1="5%" y1="90%" x2="90%" y2="90%" />
+            </svg>
+          </div>
+          <Button id="controlButton" variant="contained" onClick={this.props.step}>Step</Button>
+          <Button id="controlButton" variant="contained" onClick={this.props.run}>Run</Button>
+        </div>
+        
       </div>
     );
   }

@@ -56,6 +56,7 @@ class Insertion extends Component {
     }
   }
   async run() {
+    let x = 0
     if (!this.state.sorting) {
       this.setState({ sorting: true })
       let data = this.state.insertArray;
@@ -65,18 +66,20 @@ class Insertion extends Component {
         }
         let j = i
         while (data[j] < data[j - 1] && j > 0) {
-          let val1 = data[j]
-          let val2 = data[j - 1]
-          data[j] = val2
-          data[j - 1] = val1
-          j--
           await this.delay(1).then(() => {
-            this.setState({ insertArray: data });
+            x += 1
           });
+          let val1 = data[j];
+          let val2 = data[j - 1];
+          data[j] = val2;
+          data[j - 1] = val1;
+          j--;
+          this.setState({ insertArray: data });
 
         }
       }
       this.setState({ insertArray: data, color: "green" });
+      console.log(x)
     }
   }
 
@@ -93,9 +96,9 @@ class Insertion extends Component {
           name="Insertion Sort"
           graphId="insertionGraph"
           svgId="insertionSVG"
+          step={this.step}
+          run={this.run}
         />
-        <Button variant="contained" onClick={this.step}>Step</Button>
-        <Button variant="contained" onClick={this.run}>Run</Button>
       </div>
     );
   }

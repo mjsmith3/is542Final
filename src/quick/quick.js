@@ -31,7 +31,6 @@ class Quick extends Component {
     }
   }
 
-
   step() {
     if (!this.state.sorting) {
       let inputArr = this.state.array
@@ -57,18 +56,6 @@ class Quick extends Component {
       this.setState({ sorting: true })
       let inputArr = this.state.array
       let len = inputArr.length;
-      for (let i = 0; i < len; i++) {
-        for (let j = 0; j < len; j++) {
-          if (inputArr[j] > inputArr[j + 1]) {
-            let tmp = inputArr[j];
-            inputArr[j] = inputArr[j + 1];
-            inputArr[j + 1] = tmp;
-            await this.delay(1).then(() => {
-              this.setState({ insertArray: inputArr });
-            });
-          }
-        }
-      }
 
       this.setState({ array: inputArr, color: "green" });
     }
@@ -87,9 +74,9 @@ class Quick extends Component {
           name="Quick Sort"
           graphId="quickGraph"
           svgId="quickSVG"
+          step={this.step}
+          run = {this.run}
         />
-        <Button variant="contained" onClick={this.step}>Step</Button>
-        <Button variant="contained" onClick={this.run}>Run</Button>
       </div>
     );
   }
