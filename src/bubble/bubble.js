@@ -19,13 +19,10 @@ class Bubble extends Component {
   }
 
   componentDidUpdate(nextProps) {
-    console.log("executing")
     let newdata = this.props.data
     let currentData = nextProps.data
     if (currentData !== newdata) {
       this.setState({ array: [...newdata], color: "blue", sorting: false })
-      console.log("executing")
-
       this.BubbleSort([...newdata])
     }
     if (this.props.runAll && this.props.runAll !== nextProps.runAll) {

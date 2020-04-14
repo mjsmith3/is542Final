@@ -10,14 +10,10 @@ class Insertion extends Component {
     super(props);
     this.state = {
       array: [],
-      color: "blue",
       sorting: false,
       arrStack: [],
     }
 
-    this.delay = this.delay.bind(this);
-    this.run = this.run.bind(this);
-    this.step = this.step.bind(this);
     this.insertionSort = this.insertionSort.bind(this);
   }
 
@@ -25,48 +21,13 @@ class Insertion extends Component {
     let newdata = this.props.data
     let currentData = nextProps.data
     if (currentData !== newdata) {
-      this.setState({ array: [...newdata], color: "blue", sorting: false })
+      this.setState({ array: [...newdata], sorting: false })
+      this.insertionSort([...newdata])
     }
     if (this.props.runAll && this.props.runAll !== nextProps.runAll) {
       this.setState({ sorting: true })
       this.run();
     }
-  }
-
-  step() {
-    if (!this.state.sorting) {
-      let data = this.state.insertArray
-      for (let i = 0; i < data.length; i++) {
-        if (i === 0) {
-          continue;
-        }
-        let j = i
-        let change = false
-        while (data[j] < data[j - 1] && j > 0) {
-          let val1 = data[j]
-          let val2 = data[j - 1]
-          data[j] = val2
-          data[j - 1] = val1
-          j--
-          change = true
-          break
-        }
-        if (change) {
-          break
-        }
-      }
-      this.setState({ insertArray: data });
-    }
-  }
-  async run() {
-    let x = 0
-    if (!this.state.sorting) {
-
-    }
-  }
-
-  delay(number) {
-    return new Promise(resolve => setTimeout(resolve, number));
   }
 
   insertionSort(data) {
@@ -88,7 +49,6 @@ class Insertion extends Component {
       }
     }
 
-    //console.log("insertion" + arrayStack[0])
     this.setState({ arrStack: arrayStack });
   }
 
