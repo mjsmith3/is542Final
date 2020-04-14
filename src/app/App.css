@@ -8,11 +8,11 @@
     display: grid;
     grid-column-gap: 1px;
     grid-template-columns: 1fr 1fr 1fr ;
-    grid-template-rows:  5em 1fr 1fr ;
+    grid-template-rows:  4em .75fr .75fr ;
     grid-template-areas: 
         "header header header"
         "insertion bubble quick"
-        "selection merge radix";
+        "selection merge cycle";
 }
 
 .header {
@@ -35,8 +35,8 @@
 .merge {
   grid-area: merge;
 }
-.radix {
-  grid-area: radix;
+.cycle {
+  grid-area: cycle;
 }
 #title {
   margin-right: 25%;

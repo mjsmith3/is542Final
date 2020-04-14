@@ -23,11 +23,16 @@ class Bubble extends Component {
     let currentData = nextProps.data
     if (currentData !== newdata) {
       this.setState({ array: [...newdata], color: "blue", sorting: false })
+      // let t0 = performance.now()
+
       this.BubbleSort([...newdata])
+
+      // let t1 = performance.now()
+      // console.log("Call to doSomething took " + (t1 - t0) + " milliseconds. BUBBLE")
     }
     if (this.props.runAll && this.props.runAll !== nextProps.runAll) {
       this.setState({ sorting: true })
-      this.run();
+      this.BubbleSort([...newdata])
     }
   }
 
@@ -35,7 +40,6 @@ class Bubble extends Component {
     let arrayStack = [];
     let len = inputArr.length;
     for (let i = 0; i < len; i++) {
-      console.log(inputArr)
       for (let j = 0; j < len; j++) {
         if (inputArr[j] > inputArr[j + 1]) {
           let tmp = inputArr[j];
@@ -47,7 +51,6 @@ class Bubble extends Component {
         }
       }
     }
-    console.log("bubble: " + arrayStack[0]);
     this.setState({ arrStack: arrayStack });
   }
 
@@ -60,9 +63,8 @@ class Bubble extends Component {
           name="Bubble Sort"
           graphId="bubbleGraph"
           svgId="bubbleSVG"
-          step={this.step}
-          run={this.run}
           arrStack={this.state.arrStack}
+          time={this.state.time}
         />
       </div>
     );

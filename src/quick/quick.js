@@ -4,66 +4,144 @@ import './quick.css';
 import Graph from '../graph/graph';
 import Button from '@material-ui/core/Button';
 
+const tempStack = () => {
+  let stack = [];
+  return {
+    add: (value) => {
+      stack.push(value);
+    },
+    clear: () => {
+      stack = [];
+    },
+    getStack: () => {
+      return stack
+    }
+  }
+}
+const tStack = tempStack();
 
 class Quick extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      array: [],
       color: "blue",
       sorting: false,
+      arrStack: [],
+      time: null,
     }
 
-    this.delay = this.delay.bind(this);
-    this.run = this.run.bind(this);
-    this.step = this.step.bind(this);
+    this.swap = this.swap.bind(this);
+    this.partition = this.partition.bind(this);
+    this.quickSort = this.quickSort.bind(this);
   }
 
   componentDidUpdate(nextProps) {
     let newdata = this.props.data
     let currentData = nextProps.data
     if (currentData !== newdata) {
-      this.setState({ array: [...newdata], color: "blue", sorting: false })
-    }
-    if (this.props.runAll && this.props.runAll !== nextProps.runAll) {
-      this.setState({ sorting: true })
-      this.run();
+      // get the time
+      let t0 = window.performance.now()
+      this.quickSortTime([...newdata])
+      let t1 = window.performance.now()
+
+      console.log("Call to quickSort took " + (t1 - t0) + " milliseconds.")
+      
+      tStack.clear()
+      this.quickSort(newdata)
+      this.setState({arrStack: tStack.getStack(), finished: true, time: (t0-t1)})
     }
   }
 
-  step() {
-    if (!this.state.sorting) {
-      let inputArr = this.state.array
-      let len = inputArr.length;
-      for (let i = 0; i < len; i++) {
-        for (let j = 0; j < len; j++) {
-          if (inputArr[j] > inputArr[j + 1]) {
-            let tmp = inputArr[j];
-            inputArr[j] = inputArr[j + 1];
-            inputArr[j + 1] = tmp;
-            break
-          }
-        }
-        break
+  swap(items, leftIndex, rightIndex){
+    var temp = items[leftIndex];
+    items[leftIndex] = items[rightIndex];
+    items[rightIndex] = temp;
+
+    let tempArray = [...items]
+    if (tStack.getStack().length == 0) {
+      tStack.add(tempArray);
+    } else {
+      let currentStack = tStack.getStack()
+      if (currentStack[currentStack.length-1] != tempArray) {
+        tStack.add(tempArray);
       }
-
-      this.setState({ array: inputArr });
     }
   }
 
-  async run() {
-    if (!this.state.sorting) {
-      this.setState({ sorting: true })
-      let inputArr = this.state.array
-      let len = inputArr.length;
+  partition(items, left, right) {
+    let pivot = items[Math.floor((right + left) / 2)]; //middle element
+    let i = left; //left pointer
+    let j = right; //right pointer
+    while (i <= j) {
+        while (items[i] < pivot) {
+            i++;
+        }
+        while (items[j] > pivot) {
+            j--;
+        }
+        if (i <= j) {
+            this.swap(items, i, j); //swap two elements
+            i++;
+            j--;
+        }
+    }
+    return i;
+  }
 
-      this.setState({ array: inputArr, color: "green" });
+  quickSort(items, left =0, right = items.length -1) {
+    let index;
+    if (items.length > 1) {
+        index = this.partition(items, left, right); //index returned from partition
+        if (left < index - 1) { //more elements on the left side of the pivot
+            this.quickSort(items, left, index - 1);
+        }
+        if (index < right) { //more elements on the right side of the pivot
+            this.quickSort(items, index, right);
+        }
     }
   }
 
-  delay(number) {
-    return new Promise(resolve => setTimeout(resolve, number));
+  //These functions are simply for time
+  swapTime(items, leftIndex, rightIndex){
+    var temp = items[leftIndex];
+    items[leftIndex] = items[rightIndex];
+    items[rightIndex] = temp;
   }
+
+  partitionTime(items, left, right) {
+    let pivot = items[Math.floor((right + left) / 2)]; //middle element
+    let i = left; //left pointer
+    let j = right; //right pointer
+    while (i <= j) {
+        while (items[i] < pivot) {
+            i++;
+        }
+        while (items[j] > pivot) {
+            j--;
+        }
+        if (i <= j) {
+            this.swapTime(items, i, j); //swap two elements
+            i++;
+            j--;
+        }
+    }
+    return i;
+  }
+
+  quickSortTime(items, left =0, right = items.length -1) {
+    let index;
+    if (items.length > 1) {
+        index = this.partitionTime(items, left, right); //index returned from partition
+        if (left < index - 1) { //more elements on the left side of the pivot
+            this.quickSortTime(items, left, index - 1);
+        }
+        if (index < right) { //more elements on the right side of the pivot
+            this.quickSortTime(items, index, right);
+        }
+    }
+  }
+
+
 
   render() {
     return (
@@ -74,8 +152,8 @@ class Quick extends Component {
           name="Quick Sort"
           graphId="quickGraph"
           svgId="quickSVG"
-          step={this.step}
-          run = {this.run}
+          arrStack={this.state.arrStack}
+          time={this.state.time}
         />
       </div>
     );

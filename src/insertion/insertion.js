@@ -11,6 +11,7 @@ class Insertion extends Component {
     this.state = {
       array: [],
       sorting: false,
+      color: "blue",
       arrStack: [],
     }
 
@@ -26,7 +27,7 @@ class Insertion extends Component {
     }
     if (this.props.runAll && this.props.runAll !== nextProps.runAll) {
       this.setState({ sorting: true })
-      this.run();
+      this.insertionSort([...newdata])
     }
   }
 
@@ -61,9 +62,8 @@ class Insertion extends Component {
           name="Insertion Sort"
           graphId="insertionGraph"
           svgId="insertionSVG"
-          step={this.step}
-          run={this.run}
           arrStack={this.state.arrStack}
+          time={this.state.time}
         />
       </div>
     );

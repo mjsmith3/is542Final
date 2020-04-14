@@ -37,7 +37,7 @@ class Graph extends Component {
     let newArray = this.props.arrStack
     let currentArray = currentProps.arrStack
     if (currentArray !== newArray) {
-      this.setState({ sortStack: newArray })
+      this.setState({ sortStack: newArray, sortingStep:0 })
     }
     this.renderData();
   }
@@ -130,6 +130,7 @@ class Graph extends Component {
   delay(number) {
     return new Promise(resolve => setTimeout(resolve, number));
   }
+  
 
   render() {
     return (
@@ -138,7 +139,8 @@ class Graph extends Component {
 
           <div id={this.props.svgId} style={{ height: "85%" }}>
             <p>{this.props.name}</p>
-            <svg height="100%" width="100%" id={this.props.graphId}>
+            <p>Time to sort: {this.props.time} ms</p>
+            <svg height="80%" width="100%" id={this.props.graphId}>
               <line id="xAxis" x1="5%" y1="5%" x2="5%" y2="90%" />
               <line id="yAxis" x1="5%" y1="90%" x2="90%" y2="90%" />
             </svg>

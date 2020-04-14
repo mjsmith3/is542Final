@@ -4,13 +4,14 @@ import Bubble from '../bubble/bubble';
 import Quick from '../quick/quick';
 import Selection from '../selection/selection';
 import Merge from '../merge/merge';
-import Radix from '../radix/radix';
+import Cycle from '../cycle/cycle';
 import './App.css';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import { merge } from 'd3';
 
 
 class App extends Component {
@@ -91,6 +92,12 @@ class App extends Component {
 
 
   render() {
+    let insertionData = [...this.state.data];
+    let bubbleData = [...this.state.data];
+    let quickData = [...this.state.data];
+    let selectionData = [...this.state.data];
+    let mergeData = [...this.state.data];
+    let cycleData = [...this.state.data];
     return (
       <div className="container">
         <AppBar className="header">
@@ -109,12 +116,12 @@ class App extends Component {
 
           </Toolbar>
         </AppBar>
-        <Insertion className="insertion" data={this.state.data} runAll={this.state.runAll} />
-        <Bubble className="bubble" data={this.state.data} runAll={this.state.runAll} />
-        <Quick className="quick" data={this.state.data} runAll={this.state.runAll} />
-        <Selection className="selection" data={this.state.data} runAll={this.state.runAll} />
-        <Merge className="merge" data={this.state.data} runAll={this.state.runAll} />
-        <Radix className="radix" data={this.state.data} runAll={this.state.runAll} />
+        <Insertion className="insertion" data={insertionData} runAll={this.state.runAll} />
+        <Bubble className="bubble" data={bubbleData} runAll={this.state.runAll} />
+        <Quick className="quick" data={quickData} runAll={this.state.runAll} />
+        <Selection className="selection" data={selectionData} runAll={this.state.runAll} />
+        <Merge className="merge" data={mergeData} runAll={this.state.runAll} />
+        <Cycle className="cycle" data={cycleData} runAll={this.state.runAll} />
       </div >
     );
   }

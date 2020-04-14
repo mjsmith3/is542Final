@@ -10,13 +10,12 @@ class Selection extends Component {
     super(props);
     this.state = {
       array: [],
-      color: "blue",
       sorting: false,
+      color: "blue",
+      arrStack: [],
     }
 
-    this.delay = this.delay.bind(this);
-    this.run = this.run.bind(this);
-    this.step = this.step.bind(this);
+    this.selectionSort = this.selectionSort.bind(this);
   }
 
   componentDidUpdate(nextProps) {
@@ -24,65 +23,37 @@ class Selection extends Component {
     let currentData = nextProps.data
     if (currentData !== newdata) {
       this.setState({ array: [...newdata], color: "blue", sorting: false })
+      // let t0 = performance.now()
+      this.selectionSort([...newdata])
+      // let t1 = performance.now()
+      // console.log("Call to doSomething took " + (t1 - t0) + " milliseconds. BUBBLE")
     }
     if (this.props.runAll && this.props.runAll !== nextProps.runAll) {
       this.setState({ sorting: true })
-      this.run();
+      this.selectionSort([...newdata])
     }
   }
 
+  selectionSort(arr) {
+    let arrayStack = [];
 
-  step() {
-    if (!this.state.sorting) {
-      let inputArr = this.state.array
-      let len = inputArr.length;
-        for (let i = 0; i < len; i++) {
-            let min = i;
-            for (let j = i + 1; j < len; j++) {
-                if (inputArr[min] > inputArr[j]) {
-                    min = j;
-                }
-            }
-            if (min !== i) {
-                let tmp = inputArr[i];
-                inputArr[i] = inputArr[min];
-                inputArr[min] = tmp;
-                break
+    let len = arr.length;
+    for (let i = 0; i < len; i++) {
+        let min = i;
+        for (let j = i + 1; j < len; j++) {
+            if (arr[min] > arr[j]) {
+                min = j;
             }
         }
-      this.setState({ array: inputArr });
-    }
-  }
-
-  async run() {
-    let x = 0
-    if (!this.state.sorting) {
-      let inputArr = this.state.array
-      let len = inputArr.length;
-        for (let i = 0; i < len; i++) {
-            let min = i;
-            for (let j = i + 1; j < len; j++) {
-                await this.delay(1).then(() => {
-                  x +=1
-                });
-                if (inputArr[min] > inputArr[j]) {
-                    min = j;
-                }
-            }
-            if (min !== i) {
-                let tmp = inputArr[i];
-                inputArr[i] = inputArr[min];
-                inputArr[min] = tmp;
-                this.setState({ insertArray: inputArr });
-            }
+        if (min !== i) {
+            let tmp = arr[i];
+            arr[i] = arr[min];
+            arr[min] = tmp;
+            let tempArr = [...arr];
+            arrayStack.push(tempArr)
         }
-      this.setState({ array: inputArr, color:"green" });
-      console.log("selection " + x)
     }
-  }
-
-  delay(number) {
-    return new Promise(resolve => setTimeout(resolve, number));
+    this.setState({ arrStack: arrayStack });
   }
 
   render() {
@@ -94,8 +65,8 @@ class Selection extends Component {
           name="Selection Sort"
           graphId="selectionGraph"
           svgId="selectionSVG"
-          step={this.step}
-          run = {this.run}
+          arrStack={this.state.arrStack}
+          time={this.state.time}
         />
       </div>
     );
