@@ -12,18 +12,21 @@ class Bubble extends Component {
       array: [],
       color: "blue",
       sorting: false,
+      arrStack: [],
     }
 
-    this.delay = this.delay.bind(this);
-    this.run = this.run.bind(this);
-    this.step = this.step.bind(this);
+    this.BubbleSort = this.BubbleSort.bind(this);
   }
 
   componentDidUpdate(nextProps) {
+    console.log("executing")
     let newdata = this.props.data
     let currentData = nextProps.data
     if (currentData !== newdata) {
       this.setState({ array: [...newdata], color: "blue", sorting: false })
+      console.log("executing")
+
+      this.BubbleSort([...newdata])
     }
     if (this.props.runAll && this.props.runAll !== nextProps.runAll) {
       this.setState({ sorting: true })
@@ -31,54 +34,24 @@ class Bubble extends Component {
     }
   }
 
+  BubbleSort(inputArr) {
+    let arrayStack = [];
+    let len = inputArr.length;
+    for (let i = 0; i < len; i++) {
+      console.log(inputArr)
+      for (let j = 0; j < len; j++) {
+        if (inputArr[j] > inputArr[j + 1]) {
+          let tmp = inputArr[j];
+          inputArr[j] = inputArr[j + 1];
+          inputArr[j + 1] = tmp;
+          let tempArr = [...inputArr];
 
-  step() {
-    if (!this.state.sorting) {
-      let inputArr = this.state.array
-      let len = inputArr.length;
-      for (let i = 0; i < len; i++) {
-        for (let j = 0; j < len; j++) {
-          if (inputArr[j] > inputArr[j + 1]) {
-            let tmp = inputArr[j];
-            inputArr[j] = inputArr[j + 1];
-            inputArr[j + 1] = tmp;
-            break
-          }
-        }
-        break
-      }
-
-      this.setState({ array: inputArr });
-    }
-  }
-
-  async run() {
-    let x = 0
-    if (!this.state.sorting) {
-      this.setState({ sorting: true })
-      let inputArr = this.state.array
-      let len = inputArr.length;
-      for (let i = 0; i < len; i++) {
-        for (let j = 0; j < len; j++) {
-          await this.delay(1).then(() => {
-            x +=1;
-          });
-          if (inputArr[j] > inputArr[j + 1]) {
-            let tmp = inputArr[j];
-            inputArr[j] = inputArr[j + 1];
-            inputArr[j + 1] = tmp;
-            this.setState({ insertArray: inputArr });
-          }
+          arrayStack.push(tempArr)
         }
       }
-
-      this.setState({ array: inputArr, color: "green" });
-      console.log("bubble " + x);
     }
-  }
-
-  delay(number) {
-    return new Promise(resolve => setTimeout(resolve, number));
+    console.log("bubble: " + arrayStack[0]);
+    this.setState({ arrStack: arrayStack });
   }
 
   render() {
@@ -91,7 +64,8 @@ class Bubble extends Component {
           graphId="bubbleGraph"
           svgId="bubbleSVG"
           step={this.step}
-          run = {this.run}
+          run={this.run}
+          arrStack={this.state.arrStack}
         />
       </div>
     );
