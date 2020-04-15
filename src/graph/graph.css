@@ -4,6 +4,7 @@
 }
 #controlButton {
   margin: .5em;
+  margin-top: .5em;
 }
 line {
   stroke:rgb(2, 2, 2);

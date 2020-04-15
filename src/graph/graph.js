@@ -12,9 +12,9 @@ class Graph extends Component {
     this.state = {
       height: 0,
       width: 0,
-      calculated: false,
       sortStack: [],
       sortingStep: 0,
+      color:"blue"
     }
     this.stepBackward = this.stepBackward.bind(this);
     this.stepForward = this.stepForward.bind(this);
@@ -37,9 +37,13 @@ class Graph extends Component {
     let newArray = this.props.arrStack
     let currentArray = currentProps.arrStack
     if (currentArray !== newArray) {
-      this.setState({ sortStack: newArray, sortingStep:0 })
+      this.setState({ sortStack: newArray, sortingStep:0, color: "blue" })
     }
     this.renderData();
+
+    if (this.props.runAll && this.props.runAll !== currentProps.runAll) {
+      this.run()
+    }
   }
 
   calculateSVGSize() {
@@ -93,7 +97,7 @@ class Graph extends Component {
           return divHeight - y(d) + (divHeight * barBuffer);
         })
         .attr("width", x.bandwidth)
-        .attr("fill", this.props.color)
+        .attr("fill", this.state.color)
     }
   }
 
@@ -103,6 +107,9 @@ class Graph extends Component {
 
   stepForward() {
     if (this.state.sortingStep < this.state.sortStack.length - 1) {
+      if (this.state.sortingStep === this.state.sortStack.length-1) {
+        this.setState({color:"green"})
+      }
       this.setState(prevState => ({
         sortingStep: prevState.sortingStep + 1
       }));
@@ -112,15 +119,20 @@ class Graph extends Component {
   stepBackward() {
     if (this.state.sortingStep > 0) {
       this.setState(prevState => ({
-        sortingStep: prevState.sortingStep - 1
+        sortingStep: prevState.sortingStep - 1, color: "blue"
       }));
     }
   }
 
   async run() {
-    for (let i = 0; i < this.state.sortStack.length; i++) {
-      await this.delay(1).then(() => {
+    //calculate the delay
+
+    for (let i = this.state.sortingStep; i < this.state.sortStack.length; i++) {
+      await this.delay(this.props.time).then(() => {
       });
+      if (i === this.state.sortStack.length-1) {
+        this.setState({color:"green"})
+      }
       this.setState(prevState => ({
         sortingStep: prevState.sortingStep + 1
       }));
@@ -129,6 +141,14 @@ class Graph extends Component {
 
   delay(number) {
     return new Promise(resolve => setTimeout(resolve, number));
+  }
+
+  getSize() {
+    let x = window.matchMedia("(max-width: 700px)");
+    if (x.matches) { // If media query matches
+      return "small";
+    }
+    return "large"
   }
   
 
@@ -145,11 +165,10 @@ class Graph extends Component {
               <line id="yAxis" x1="5%" y1="90%" x2="90%" y2="90%" />
             </svg>
           </div>
-          <Button id="controlButton" variant="contained" onClick={this.stepForward}>Step Forward</Button>
-          <Button id="controlButton" variant="contained" onClick={this.stepBackward}>Step Backward</Button>
-          <Button id="controlButton" variant="contained" onClick={this.run}>Run</Button>
+          <Button id="controlButton" variant="contained" size={this.getSize()} onClick={this.stepForward}>Step Forward</Button>
+          <Button id="controlButton" variant="contained" size={this.getSize()} onClick={this.stepBackward}>Step Backward</Button>
+          <Button id="controlButton" variant="contained" size={this.getSize()} onClick={this.run}>Run</Button>
         </div>
-
       </div>
     );
   }

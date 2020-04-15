@@ -9,10 +9,8 @@ class Insertion extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      array: [],
-      sorting: false,
-      color: "blue",
       arrStack: [],
+      time: null
     }
 
     this.insertionSort = this.insertionSort.bind(this);
@@ -22,12 +20,16 @@ class Insertion extends Component {
     let newdata = this.props.data
     let currentData = nextProps.data
     if (currentData !== newdata) {
-      this.setState({ array: [...newdata], sorting: false })
+      // get the time
+      let t0 = window.performance.now()
+      for (let i = 0; i<1000;i ++) {
+        this.insertionSortTime([...newdata])
+      }
+      
+      let t1 = window.performance.now() 
+
       this.insertionSort([...newdata])
-    }
-    if (this.props.runAll && this.props.runAll !== nextProps.runAll) {
-      this.setState({ sorting: true })
-      this.insertionSort([...newdata])
+      this.setState({time: t1 - t0})
     }
   }
 
@@ -53,17 +55,32 @@ class Insertion extends Component {
     this.setState({ arrStack: arrayStack });
   }
 
+  insertionSortTime(data) {
+    for (let i = 0; i < data.length; i++) {
+      if (i === 0) {
+        continue;
+      }
+      let j = i
+      while (data[j] < data[j - 1] && j > 0) {
+        let val1 = data[j];
+        let val2 = data[j - 1];
+        data[j] = val2;
+        data[j - 1] = val1;
+        j--;
+      }
+    }
+  }
+
   render() {
     return (
       <div className="insertion">
         <Graph
-          data={this.state.insertArray}
-          color={this.state.color}
           name="Insertion Sort"
           graphId="insertionGraph"
           svgId="insertionSVG"
           arrStack={this.state.arrStack}
           time={this.state.time}
+          runAll = {this.props.runAll}
         />
       </div>
     );

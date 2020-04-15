@@ -24,8 +24,6 @@ class Quick extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      color: "blue",
-      sorting: false,
       arrStack: [],
       time: null,
     }
@@ -41,14 +39,14 @@ class Quick extends Component {
     if (currentData !== newdata) {
       // get the time
       let t0 = window.performance.now()
-      this.quickSortTime([...newdata])
-      let t1 = window.performance.now()
-
-      console.log("Call to quickSort took " + (t1 - t0) + " milliseconds.")
+      for (let i = 0; i<1000;i ++) {
+        this.quickSortTime([...newdata])
+      }
+      let t1 = window.performance.now()      
       
       tStack.clear()
       this.quickSort(newdata)
-      this.setState({arrStack: tStack.getStack(), finished: true, time: (t0-t1)})
+      this.setState({arrStack: tStack.getStack(), finished: true, time: (t1-t0)})
     }
   }
 
@@ -147,13 +145,12 @@ class Quick extends Component {
     return (
       <div className="quick">
         <Graph
-          data={this.state.array}
-          color={this.state.color}
           name="Quick Sort"
           graphId="quickGraph"
           svgId="quickSVG"
           arrStack={this.state.arrStack}
           time={this.state.time}
+          runAll={this.props.runAll}
         />
       </div>
     );

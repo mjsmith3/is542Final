@@ -89,6 +89,14 @@ class App extends Component {
     this.setState({ data: newdata, runAll: false })
   }
 
+  getSize() {
+    let x = window.matchMedia("(max-width: 700px)");
+    if (x.matches) { // If media query matches
+      return "small";
+    }
+    return "large"
+  }
+
 
 
   render() {
@@ -108,10 +116,10 @@ class App extends Component {
               IS 542 Final - Sorting App
           </Typography>
             <span>
-              <Button variant="contained" id="headerButton" onClick={this.randomize} >Randomize</Button>
-              <Button variant="contained" id="headerButton" onClick={this.fewUnique} >Few Unique</Button>
-              <Button variant="contained" id="headerButton" onClick={this.nearlySorted} >Nearly Sorted</Button>
-              <Button variant="contained" id="headerButton" onClick={this.runAll} >Run All</Button>
+              <Button variant="contained" id="headerButton" size={this.getSize()} onClick={this.randomize} >Randomize</Button>
+              <Button variant="contained" id="headerButton" size={this.getSize()} onClick={this.fewUnique} >Few Unique</Button>
+              <Button variant="contained" id="headerButton" size={this.getSize()} onClick={this.nearlySorted} >Nearly Sorted</Button>
+              <Button variant="contained" id="headerButton" size={this.getSize()} onClick={this.runAll} >Run All</Button>
             </span>
 
           </Toolbar>

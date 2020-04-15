@@ -9,10 +9,8 @@ class Bubble extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      array: [],
-      color: "blue",
-      sorting: false,
       arrStack: [],
+      time: null
     }
 
     this.BubbleSort = this.BubbleSort.bind(this);
@@ -22,17 +20,16 @@ class Bubble extends Component {
     let newdata = this.props.data
     let currentData = nextProps.data
     if (currentData !== newdata) {
-      this.setState({ array: [...newdata], color: "blue", sorting: false })
-      // let t0 = performance.now()
+      // get the time
+      let t0 = window.performance.now()
+      for (let i = 0; i<1000;i ++) {
+        this.BubbleSortTime([...newdata])
+      }
+      
+      let t1 = window.performance.now() 
 
       this.BubbleSort([...newdata])
-
-      // let t1 = performance.now()
-      // console.log("Call to doSomething took " + (t1 - t0) + " milliseconds. BUBBLE")
-    }
-    if (this.props.runAll && this.props.runAll !== nextProps.runAll) {
-      this.setState({ sorting: true })
-      this.BubbleSort([...newdata])
+      this.setState({time: t1 - t0})
     }
   }
 
@@ -54,17 +51,29 @@ class Bubble extends Component {
     this.setState({ arrStack: arrayStack });
   }
 
+  BubbleSortTime(inputArr) {
+    let len = inputArr.length;
+    for (let i = 0; i < len; i++) {
+      for (let j = 0; j < len; j++) {
+        if (inputArr[j] > inputArr[j + 1]) {
+          let tmp = inputArr[j];
+          inputArr[j] = inputArr[j + 1];
+          inputArr[j + 1] = tmp;
+        }
+      }
+    }
+  }
+
   render() {
     return (
       <div className="bubble">
         <Graph
-          data={this.state.array}
-          color={this.state.color}
           name="Bubble Sort"
           graphId="bubbleGraph"
           svgId="bubbleSVG"
           arrStack={this.state.arrStack}
           time={this.state.time}
+          runAll = {this.props.runAll}
         />
       </div>
     );

@@ -3,17 +3,60 @@
 }
 
 .container {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-column-gap: 1px;
+  grid-template-columns: 1fr 1fr 1fr ;
+  grid-template-rows:  4em .75fr .75fr ;
+  grid-template-areas: 
+      "header header header"
+      "insertion bubble quick"
+      "selection merge cycle";
+}
+#title {
+  margin-right: 25%;
+  margin-left: 5%;
+}
+
+#headerButton {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+@media screen and (max-width:700px){
+  .container {
     width: 100vw;
     height: 100vh;
     display: grid;
     grid-column-gap: 1px;
-    grid-template-columns: 1fr 1fr 1fr ;
-    grid-template-rows:  4em .75fr .75fr ;
+    grid-template-columns: 1fr;
+    grid-template-rows:  12em 1fr 1fr 1fr 1fr 1fr 1fr ;
     grid-template-areas: 
-        "header header header"
-        "insertion bubble quick"
-        "selection merge cycle";
+        "header"
+        "insertion"
+        "bubble"
+        "quick"
+        "selection"
+        "merge"
+        "cycle";
+  }
+  #title {
+    margin-right: 2em%;
+    margin-left: 1em;
+  }
+  
+  #headerButton {
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: .5em;
+    
+  }
 }
+
+
+
+
 
 .header {
     grid-area: header;
@@ -38,15 +81,7 @@
 .cycle {
   grid-area: cycle;
 }
-#title {
-  margin-right: 25%;
-  margin-left: 5%;
-}
 
-#headerButton {
-  margin-left: 1em;
-  margin-right: 1em;
-}
 
 
 

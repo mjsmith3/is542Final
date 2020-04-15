@@ -23,10 +23,8 @@ class Merge extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      array: [],
-      color: "blue",
-      sorting: false,
       arrStack: [],
+      time:null
     }
   }
 
@@ -34,27 +32,21 @@ class Merge extends Component {
     let newdata = this.props.data
     let currentData = nextProps.data
     if (currentData !== newdata) {
-      this.setState({array: newdata})
-      //figure out why the state won't reset
+      let t0 = window.performance.now()
+
+      for (let i = 0; i<1000;i ++) {
+        this.mergeSortTime([...newdata])
+      }
+
+      let t1 = window.performance.now()
+
       tStack.clear()
-
-      // let t0 = window.performance.now()
-
       this.mergeSort(newdata)
-
-      // let t1 = window.performance.now()
-      // console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
-      // console.log(t0)
-      // console.log(t1)
       let stack = tStack.getStack();
       stack[stack.length-1] = stack[stack.length-1].slice(0,49);
 
-      this.setState({arrStack: tStack.getStack(), finished: true})
-    }
-    if (this.props.runAll && this.props.runAll !== nextProps.runAll) {
-      this.setState({ sorting: true })
-      this.mergeSort(newdata);
-    }
+      this.setState({arrStack: tStack.getStack(), finished: true, time: (t1-t0)})
+    } 
   }
 
   merge(arr1,arr2) {
@@ -139,17 +131,52 @@ class Merge extends Component {
     return tempArray
   }
 
+  //These are used to get an accurate time recording
+  mergeTime(arr1,arr2) {
+    let results = [];
+    let i=0;
+    let j=0;
+    while(i < arr1.length && j < arr2.length) {
+        if (arr1[i] < arr2[j]) {
+            results.push(arr1[i]);
+            i++;
+        } else {
+           results.push(arr2[j]);
+           j++
+        }
+
+    }
+    while(i < arr1.length) {
+        results.push(arr1[i]);
+        i++;
+    }
+    while(j < arr2.length) {
+        results.push(arr2[j]);
+        j++;
+    }
+    return results;
+  }
+
+  mergeSortTime(arr){
+      if (arr.length <= 1) {
+          return arr
+      }
+      let mid=Math.floor(arr.length/2)
+      let left=this.mergeSortTime(arr.slice(0,mid));
+      let right=this.mergeSortTime(arr.slice(mid));
+      return this.mergeTime(left,right);
+  }
+
   render() {
     return (
       <div className="merge">
         <Graph
-          data={this.state.array}
-          color={this.state.color}
           name="Merge Sort"
           graphId="mergeGraph"
           svgId="mergeSVG"
           arrStack={this.state.arrStack}
           time={this.state.time}
+          runAll = {this.props.runAll}
         />
       </div>
     );
