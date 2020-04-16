@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as d3 from 'd3';
 import './cycle.css';
 import Graph from '../graph/graph';
 
@@ -46,11 +45,11 @@ class Cycle extends Component {
           currentIndexCopy++
   
       // if currentIndexCopy has not changed, the item at the currentIndex is already in the correct currentIndexCopy
-      if (currentIndexCopy == currentIndex)
+      if (currentIndexCopy===currentIndex)
         continue
   
       // skip duplicates
-      while (item == array[currentIndexCopy])
+      while (item===array[currentIndexCopy])
         currentIndexCopy++
   
       // swap
@@ -62,7 +61,7 @@ class Cycle extends Component {
       arrayStack.push(tempArr)
   
       // repeat above steps as long as we can find values to swap
-      while (currentIndexCopy != currentIndex) {
+      while (currentIndexCopy!==currentIndex) {
         currentIndexCopy = currentIndex
         // loop through all indexes that proceed the currentIndex
         for (let i = currentIndex + 1; i < array.length; i++)
@@ -70,7 +69,7 @@ class Cycle extends Component {
             currentIndexCopy++
   
         // skip duplicates
-        while (item == array[currentIndexCopy])
+        while (item===array[currentIndexCopy])
           currentIndexCopy++
   
         // swap
@@ -85,7 +84,6 @@ class Cycle extends Component {
   }
 
   cycleSortTime(array) {
-    let arrayStack = [];
     // loop from the beginning of the array to the second to last item
     for (let currentIndex = 0; currentIndex < array.length - 1; currentIndex++) {
       // save the value of the item at the currentIndex
@@ -98,11 +96,11 @@ class Cycle extends Component {
           currentIndexCopy++
   
       // if currentIndexCopy has not changed, the item at the currentIndex is already in the correct currentIndexCopy
-      if (currentIndexCopy == currentIndex)
+      if (currentIndexCopy===currentIndex)
         continue
   
       // skip duplicates
-      while (item == array[currentIndexCopy])
+      while (item===array[currentIndexCopy])
         currentIndexCopy++
   
       // swap
@@ -111,7 +109,7 @@ class Cycle extends Component {
       item = temp
   
       // repeat above steps as long as we can find values to swap
-      while (currentIndexCopy != currentIndex) {
+      while (currentIndexCopy!==currentIndex) {
         currentIndexCopy = currentIndex
         // loop through all indexes that proceed the currentIndex
         for (let i = currentIndex + 1; i < array.length; i++)
@@ -119,7 +117,7 @@ class Cycle extends Component {
             currentIndexCopy++
   
         // skip duplicates
-        while (item == array[currentIndexCopy])
+        while (item===array[currentIndexCopy])
           currentIndexCopy++
   
         // swap

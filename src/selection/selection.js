@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import * as d3 from 'd3';
 import './selection.css';
 import Graph from '../graph/graph';
-import { green } from '@material-ui/core/colors';
 
 
 class Selection extends Component {

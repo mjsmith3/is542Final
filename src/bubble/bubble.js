@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as d3 from 'd3';
 import './bubble.css';
 import Graph from '../graph/graph';
 

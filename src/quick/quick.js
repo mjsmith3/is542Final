@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import * as d3 from 'd3';
 import './quick.css';
 import Graph from '../graph/graph';
-import Button from '@material-ui/core/Button';
 
 const tempStack = () => {
   let stack = [];
@@ -56,11 +54,11 @@ class Quick extends Component {
     items[rightIndex] = temp;
 
     let tempArray = [...items]
-    if (tStack.getStack().length == 0) {
+    if (tStack.getStack().length===0) {
       tStack.add(tempArray);
     } else {
       let currentStack = tStack.getStack()
-      if (currentStack[currentStack.length-1] != tempArray) {
+      if (currentStack[currentStack.length-1]!==tempArray) {
         tStack.add(tempArray);
       }
     }

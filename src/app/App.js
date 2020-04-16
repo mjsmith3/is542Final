@@ -11,7 +11,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import { merge } from 'd3';
 
 
 class App extends Component {
@@ -26,10 +25,14 @@ class App extends Component {
     this.randomize = this.randomize.bind(this);
     this.nearlySorted = this.nearlySorted.bind(this);
     this.fewUnique = this.fewUnique.bind(this);
+    this.getRunAllButton = this.getRunAllButton.bind(this);
   }
 
   componentDidMount() {
-
+    if (this.setState.runAll) {
+      return;
+    }
+    this.randomize()
   }
 
 
@@ -46,6 +49,9 @@ class App extends Component {
       newdata.push(Math.random())
     }
 
+    if (this.setState.runAll) {
+      return;
+    }
     this.setState({ data: newdata, runAll: false })
   }
 
@@ -90,14 +96,25 @@ class App extends Component {
   }
 
   getSize() {
-    let x = window.matchMedia("(max-width: 700px)");
+    let x = window.matchMedia("(max-width: 1250px)");
     if (x.matches) { // If media query matches
       return "small";
     }
     return "large"
   }
 
-
+  getRunAllButton() {
+    if (this.state.runAll) {
+      return (
+        <Button variant="contained" id="headerButton" size={this.getSize()} onClick={this.runAll} disabled>Run All</Button>
+      )
+    }
+    else {
+      return (
+        <Button variant="contained" id="headerButton" size={this.getSize()} onClick={this.runAll} >Run All</Button>
+      )
+    }
+  }
 
   render() {
     let insertionData = [...this.state.data];
@@ -113,13 +130,13 @@ class App extends Component {
             <IconButton edge="start" color="inherit" aria-label="menu">
             </IconButton>
             <Typography variant="h5" id="title">
-              IS 542 Final - Sorting App
+              IS 542 - Sorting App
           </Typography>
             <span>
               <Button variant="contained" id="headerButton" size={this.getSize()} onClick={this.randomize} >Randomize</Button>
               <Button variant="contained" id="headerButton" size={this.getSize()} onClick={this.fewUnique} >Few Unique</Button>
               <Button variant="contained" id="headerButton" size={this.getSize()} onClick={this.nearlySorted} >Nearly Sorted</Button>
-              <Button variant="contained" id="headerButton" size={this.getSize()} onClick={this.runAll} >Run All</Button>
+              {this.getRunAllButton()}
             </span>
 
           </Toolbar>

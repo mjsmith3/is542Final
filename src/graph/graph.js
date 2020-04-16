@@ -10,11 +10,11 @@ class Graph extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      height: 0,
-      width: 0,
       sortStack: [],
       sortingStep: 0,
-      color:"blue"
+      color:"blue",
+      sorted: false,
+      time: 0,
     }
     this.stepBackward = this.stepBackward.bind(this);
     this.stepForward = this.stepForward.bind(this);
@@ -37,11 +37,11 @@ class Graph extends Component {
     let newArray = this.props.arrStack
     let currentArray = currentProps.arrStack
     if (currentArray !== newArray) {
-      this.setState({ sortStack: newArray, sortingStep:0, color: "blue" })
+      this.setState({ sortStack: newArray, sortingStep:0, color: "blue", time: this.props.time })
     }
     this.renderData();
 
-    if (this.props.runAll && this.props.runAll !== currentProps.runAll) {
+    if (this.props.runAll && this.props.runAll !== currentProps.runAll && !this.state.sorted) {
       this.run()
     }
   }
@@ -53,7 +53,6 @@ class Graph extends Component {
   }
 
   renderData() {
-    var divWidth = document.getElementById(this.props.graphId).clientWidth;
     var divHeight = document.getElementById(this.props.graphId).clientHeight * .85;
 
     if (this.state.sortStack[this.state.sortingStep]) {
@@ -77,7 +76,7 @@ class Graph extends Component {
         .paddingOuter(0.3);
 
       //Add all of the bars to your graph
-      if (d3.select("#" + this.props.graphId).selectAll("rect")._groups[0].length != 0) {
+      if (d3.select("#" + this.props.graphId).selectAll("rect")._groups[0].length!==0) {
         d3.select("#" + this.props.graphId)
           .selectAll("rect")
           .remove()
@@ -126,9 +125,11 @@ class Graph extends Component {
 
   async run() {
     //calculate the delay
+    let delay = this.state.time / 2
+    delay = delay*1000 / this.state.sortStack.length
 
     for (let i = this.state.sortingStep; i < this.state.sortStack.length; i++) {
-      await this.delay(this.props.time).then(() => {
+      await this.delay(delay).then(() => {
       });
       if (i === this.state.sortStack.length-1) {
         this.setState({color:"green"})
@@ -144,7 +145,7 @@ class Graph extends Component {
   }
 
   getSize() {
-    let x = window.matchMedia("(max-width: 700px)");
+    let x = window.matchMedia("(max-width: 1250px)");
     if (x.matches) { // If media query matches
       return "small";
     }
@@ -159,7 +160,7 @@ class Graph extends Component {
 
           <div id={this.props.svgId} style={{ height: "85%" }}>
             <p>{this.props.name}</p>
-            <p>Time to sort: {this.props.time} ms</p>
+            <p>Time to sort: {this.state.time} ms</p>
             <svg height="80%" width="100%" id={this.props.graphId}>
               <line id="xAxis" x1="5%" y1="5%" x2="5%" y2="90%" />
               <line id="yAxis" x1="5%" y1="90%" x2="90%" y2="90%" />

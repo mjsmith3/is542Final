@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as d3 from 'd3';
 import './merge.css';
 import Graph from '../graph/graph';
 
@@ -13,7 +12,7 @@ const tempStack = () => {
       stack = [];
     },
     getStack: () => {
-      return stack
+      return stack;
     }
   }
 }
@@ -41,95 +40,70 @@ class Merge extends Component {
       let t1 = window.performance.now()
 
       tStack.clear()
-      this.mergeSort(newdata)
+      this.mergeSort(newdata, 0, newdata.length-1)
+      let sortedArr = newdata.sort()
       let stack = tStack.getStack();
-      stack[stack.length-1] = stack[stack.length-1].slice(0,49);
+      stack.push(sortedArr)
 
       this.setState({arrStack: tStack.getStack(), finished: true, time: (t1-t0)})
     } 
   }
 
-  merge(arr1,arr2) {
-    let results = [];
-    let i=0;
-    let j=0;
-    while(i < arr1.length && j < arr2.length) {
-        if (arr1[i] < arr2[j]) {
-            results.push(arr1[i]);
-            i++;
-        } else {
-           results.push(arr2[j]);
-           j++
-        }
+  merge(arr, start, mid, end) { 
+    let start2 = mid + 1; 
+  
+    // If the direct merge is already sorted 
+    if (arr[mid] <= arr[start2]) { 
+        return; 
+    } 
+  
+    // Two pointers to maintain start 
+    // of both arrays to merge 
+    while (start <= mid && start2 <= end) { 
+  
+        // If element 1 is in right place 
+        if (arr[start] <= arr[start2]) { 
+            start++; 
+        } 
+        else { 
+            let value = arr[start2]; 
+            let index = start2; 
+  
+            // Shift all the elements between element 1 
+            // element 2, right by 1. 
+            while (index !== start) { 
+                arr[index] = arr[index - 1]; 
+                index--; 
+                // let tempArry = [...arr]
+                // tStack.add(tempArry)
+            } 
+            arr[start] = value; 
+            
+  
+            // Update all the pointers 
+            start++; 
+            mid++; 
+            start2++; 
+        } 
+    } 
+  } 
+  
+  /* l is for left index and r is right index of the  
+    sub-array of arr to be sorted */
+  mergeSort(arr, l, r) { 
+    if (l < r){
+      let m = Math.floor(l + (r - l) / 2)
+  
+      // # Sort first and second halves 
+      this.mergeSort(arr, l, m); 
+      this.mergeSort(arr, m + 1, r);
+      l = 0 
+      tStack.add([...arr])
+      this.merge(arr, l, m, r); 
+    }
+  } 
 
-    }
-    while(i < arr1.length) {
-        results.push(arr1[i]);
-        i++;
-    }
-    while(j < arr2.length) {
-        results.push(arr2[j]);
-        j++;
-    }
-    return results;
-  }
 
-  mergeSort(arr){
-      if (arr.length <= 1) {
-          return arr
-      }
-      let mid=Math.floor(arr.length/2)
-      let left=this.mergeSort(arr.slice(0,mid));
-      let tempArray = [...left]
-      tempArray = this.adjustArray(tempArray, arr)
-      if (tStack.getStack().length == 0) {
-        tStack.add(tempArray);
-      } else {
-        let currentStack = tStack.getStack()
-        if (currentStack[currentStack.length-1] != tempArray) {
-          tStack.add(tempArray);
-        }
-      }
-      let right=this.mergeSort(arr.slice(mid));
-      tempArray = [...right]
-      tempArray = this.adjustArray(tempArray)
-      if (tStack.getStack().length == 0) {
-        tStack.add(tempArray, arr);
-      } else {
-        let currentStack = tStack.getStack()
-        if (currentStack[currentStack.length-1] != tempArray) {
-          tStack.add(tempArray);
-        }
-      }
-      tempArray = this.merge(left,right)
-      tempArray = this.adjustArray(tempArray)
-      if (tStack.getStack().length == 0) {
-        tStack.add(tempArray);
-      } else {
-        let currentStack = tStack.getStack()
-        if (currentStack[currentStack.length-1] != tempArray) {
-          tStack.add(tempArray);
-        }
-      }
-      return this.merge(left,right);
-  }
-
-  adjustArray(tempArray) {
-    let realArray = this.props.data
-    let used = {}
-    for (let i=0; i< realArray.length; i++) {
-      used[realArray[i]] = 0
-    }
-    for (let i = 0; i < realArray.length; i++) {
-      if (tempArray.includes(realArray[i]) && used[realArray[i]] != 0) {
-        used[realArray[i]] = used[realArray[i]] - 1
-      } else {
-        tempArray.push(realArray[i]);
-      }
-    }
-
-    return tempArray
-  }
 
   //These are used to get an accurate time recording
   mergeTime(arr1,arr2) {
