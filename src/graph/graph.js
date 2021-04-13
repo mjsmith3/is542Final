@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import './graph.css';
 import Button from '@material-ui/core/Button';
-
+import {VegaGraph} from '../vega-graph'
 const barBuffer = ".06"
 
 
@@ -24,7 +24,6 @@ class Graph extends Component {
   componentDidMount() {
     window.addEventListener("resize", () => {
       this.calculateSVGSize();
-      this.renderData();
     });
     if (!this.state.calculated) {
       this.setState({ calculated: true })
@@ -32,14 +31,12 @@ class Graph extends Component {
     }
   }
 
-
   componentDidUpdate(currentProps) {
     let newArray = this.props.arrStack
     let currentArray = currentProps.arrStack
     if (currentArray !== newArray) {
       this.setState({ sortStack: newArray, sortingStep:0, color: "blue", time: this.props.time })
     }
-    this.renderData();
 
     if (this.props.runAll && this.props.runAll !== currentProps.runAll && !this.state.sorted) {
       this.run()
@@ -47,71 +44,21 @@ class Graph extends Component {
   }
 
   calculateSVGSize() {
-    let divWidth = document.getElementById(this.props.graphId).clientWidth;
-    let divHeight = document.getElementById(this.props.graphId).clientHeight;
+    let divWidth = document.getElementById(this.props.svgId).clientWidth;
+    let divHeight = document.getElementById(this.props.svgId).clientHeight;
     this.setState({ height: (divHeight * .85), width: (divWidth * .85), calculated: true })
   }
 
-  renderData() {
-    var divHeight = document.getElementById(this.props.graphId).clientHeight * .85;
-
-    if (this.state.sortStack[this.state.sortingStep]) {
-
-      let data = this.state.sortStack[this.state.sortingStep];
-
-      //Create a scale for the height of your buildings (bars)
-      let y = d3.scaleLinear()
-        .domain([0,
-          d3.max(data, function (d) { return d })
-        ])
-        .range([this.state.height, this.state.height * barBuffer])
-
-      // Create a scale for the width of each bar
-      let x = d3.scaleBand()
-        .domain(data.map(function (d, index) {
-          return index;
-        }))
-        .range([this.state.width * barBuffer, (this.state.width + this.state.width * barBuffer)])
-        .paddingInner(0.2)
-        .paddingOuter(0.3);
-
-      //Add all of the bars to your graph
-      if (d3.select("#" + this.props.graphId).selectAll("rect")._groups[0].length!==0) {
-        d3.select("#" + this.props.graphId)
-          .selectAll("rect")
-          .remove()
-      }
-      d3.select("#" + this.props.graphId)
-        .selectAll("rect")
-        .data(data)
-        .enter()
-        .append("rect")
-        .attr("y", function (d) {
-          return y(d);
-        })
-        .attr("x", function (d, index) {
-          return x(index)
-        })
-        .attr("height", function (d) {
-          return divHeight - y(d) + (divHeight * barBuffer);
-        })
-        .attr("width", x.bandwidth)
-        .attr("fill", this.state.color)
-    }
-  }
-
-  getHeight() {
-    return this.state.height;
-  }
 
   stepForward() {
-    if (this.state.sortingStep < this.state.sortStack.length - 1) {
-      if (this.state.sortingStep === this.state.sortStack.length-1) {
+    if (this.state.sortingStep <= this.state.sortStack.length - 1) {
+      if (this.state.sortingStep === this.state.sortStack.length - 1) {
         this.setState({color:"green"})
+      } else {
+        this.setState(prevState => ({
+          sortingStep: prevState.sortingStep + 1
+        }));
       }
-      this.setState(prevState => ({
-        sortingStep: prevState.sortingStep + 1
-      }));
     }
   }
 
@@ -125,18 +72,19 @@ class Graph extends Component {
 
   async run() {
     //calculate the delay
-    let delay = this.state.time / 2
-    delay = delay*1000 / this.state.sortStack.length
+    let delay = this.state.time * 500
+    delay = delay / this.state.sortStack.length
 
     for (let i = this.state.sortingStep; i < this.state.sortStack.length; i++) {
       await this.delay(delay).then(() => {
       });
       if (i === this.state.sortStack.length-1) {
         this.setState({color:"green"})
+      } else {
+        this.setState(prevState => ({
+          sortingStep: prevState.sortingStep + 1
+        }));
       }
-      this.setState(prevState => ({
-        sortingStep: prevState.sortingStep + 1
-      }));
     }
   }
 
@@ -156,19 +104,18 @@ class Graph extends Component {
   render() {
     return (
       <div className="graph">
-        <div style={{ height: "100%" }}>
-
-          <div id={this.props.svgId} style={{ height: "85%" }}>
-            <p>{this.props.name}</p>
-            <p>Time to sort: {this.state.time} ms</p>
-            <svg height="80%" width="100%" id={this.props.graphId}>
-              <line id="xAxis" x1="5%" y1="5%" x2="5%" y2="90%" />
-              <line id="yAxis" x1="5%" y1="90%" x2="90%" y2="90%" />
-            </svg>
+        <div style={{ height: "40vh" }}>
+          <p>{this.props.name}</p>
+          <p>Time to sort: {this.state.time.toFixed(2)} ms</p>
+          <div id={this.props.svgId} style={{ height: "70%" }}>
+            {this.state.sortStack[this.state.sortingStep] && <VegaGraph data={this.state.sortStack[this.state.sortingStep]} height={this.state.height} width={this.state.width} color={this.state.color}/>}
           </div>
-          <Button id="controlButton" variant="contained" size={this.getSize()} onClick={this.stepForward}>Step Forward</Button>
-          <Button id="controlButton" variant="contained" size={this.getSize()} onClick={this.stepBackward}>Step Backward</Button>
-          <Button id="controlButton" variant="contained" size={this.getSize()} onClick={this.run}>Run</Button>
+          <div style={{marginBottom:"1em"}}>
+            <Button id="controlButton" variant="contained" size={this.getSize()} onClick={this.stepForward}>Step Forward</Button>
+            <Button id="controlButton" variant="contained" size={this.getSize()} onClick={this.stepBackward}>Step Backward</Button>
+            <Button id="controlButton" variant="contained" size={this.getSize()} onClick={this.run}>Run</Button>
+
+          </div>
         </div>
       </div>
     );

@@ -9,9 +9,12 @@
     "@testing-library/user-event": "^7.2.1",
     "d3": "^5.15.0",
     "material-ui": "^0.20.2",
-    "react": "^16.13.1",
+    "react": "^16.14.0",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-vega": "^7.4.2",
+    "vega": "^5.20.2",
+    "vega-lite": "^5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
